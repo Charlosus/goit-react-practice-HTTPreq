@@ -14,13 +14,35 @@ function App() {
   //   }
   //   fetchArticles(); // invoking a function
   // }, []);
+  //==================================================================
+
+  // useEffect(() => {
+  //   async function fetchArticles() {
+  //     const response = await axios.get(
+  //       '<https://hn.algolia.com/api/v1/search?query=react>'
+  //     );
+  //     console.log(response);
+  //   }
+  //   fetchArticles();
+  // }, []);
+
+  // return (
+  //   <div>
+  //     <h1>Latest articles</h1>
+  //   </div>
+  // );
+  //===================================================================
+  //1) to operate with response we need to write in setState hook
+
+  const [articles, setArticles] = useState([]); // hook function with state articles that use setArticles to change it and initial value is empty Array
 
   useEffect(() => {
     async function fetchArticles() {
       const response = await axios.get(
         '<https://hn.algolia.com/api/v1/search?query=react>'
       );
-      console.log(response);
+      // 2) now we use setArticles form useState to assign response to artlices const so we can use it
+      setArticles(response.data.hits);
     }
     fetchArticles();
   }, []);
@@ -28,6 +50,23 @@ function App() {
   return (
     <div>
       <h1>Latest articles</h1>
+      {/* 3) now we need to display response to do that we need condiotion 
+      if articles length is longer then 0 so only after succesfull data request 
+      to use map to display articles as unordered list */}
+      {articles.length > 0 && (
+        // <ul>
+        //   {articles.map(({ objectID, url, title }) => (
+        //     <li key={objectID}>
+        //       <a href={url} target="_blank" rel="noreferrer noopener">
+        //         {title}
+        //       </a>
+        //     </li>
+        //   ))}
+        // </ul>
+        // 
+        // 4) but its better to use component for list 
+        <ArticlesList items={articles} /> // here articles are state 
+      )}
     </div>
   );
 }
